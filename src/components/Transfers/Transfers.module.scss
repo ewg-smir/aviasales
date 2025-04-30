@@ -13,6 +13,7 @@
   box-shadow: variables.$box-shadow;
   margin-right: 20px;
   margin-bottom: 20px;
+
   .title {
     color: variables.$gray-color;
     font-weight: variables.$font-weight;
@@ -23,24 +24,72 @@
     padding-right: 36px;
     white-space: nowrap;
   }
+
   .options {
     display: flex;
     flex-direction: column;
     font-weight: 400;
-    color: variables.$gray-color;
     font-size: 13px;
     line-height: 20px;
     vertical-align: middle;
     margin-bottom: 20px;
     text-align: start;
     white-space: nowrap;
-    padding-top: 10px;
-    padding-bottom: 10px;
   }
-  .options .ant-checkbox-wrapper {
-    display: block;
-    color: variables.$gray-color;
-    word-break: normal;
+
+  .options {
+    display: flex;
     flex-direction: column;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 20px;
+    text-align: start;
+    white-space: nowrap;
+
+    :global(.ant-checkbox-wrapper) {
+      display: flex;
+      align-items: center;
+      color: variables.$gray-color;
+      padding: 4px 0;
+    }
+
+    :global(.ant-checkbox-wrapper:first-child) {
+      margin-bottom: 4px; // чуть ниже "Все"
+    }
+
+    :global(.ant-checkbox + span) {
+      padding-left: 8px;
+    }
+
+    :global(.ant-checkbox-group) {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  .checkboxGroup {
+    display: flex;
+    flex-direction: column;
+
+    :global(.ant-checkbox-wrapper) {
+      display: flex;
+      align-items: center; // добавлено для выравнивания по вертикали
+      color: variables.$gray-color;
+      padding: 5px 0;
+    }
+
+    :global(.ant-checkbox) {
+      top: 0; // убирает лишний сдвиг вверх
+      transform: translateY(0); // сброс возможных эффектов
+    }
+
+    :global(.ant-checkbox + span) {
+      padding-left: 8px; // отступ между чекбоксом и текстом
+    }
+
+    :global(.ant-checkbox-group) {
+      flex-direction: column;
+      display: flex;
+    }
   }
 }

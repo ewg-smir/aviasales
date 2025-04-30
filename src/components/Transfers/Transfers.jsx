@@ -35,7 +35,9 @@ function Transfers() {
         <Checkbox indeterminate={indeterminate} onChange={onChangeSelectedAllValues} checked={checkAll}>
           Все
         </Checkbox>
-        <Checkbox.Group options={checkboxOptions} onChange={onChangeSelectedValues} value={checkedList} />
+        <div className={styles.checkboxGroup}>
+          <Checkbox.Group options={checkboxOptions} onChange={onChangeSelectedValues} value={checkedList} />
+        </div>
       </div>
     </div>
   );
