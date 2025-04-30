@@ -94,7 +94,7 @@ function App() {
   return (
     <div className={styles.App}>
       <div className={styles.logo}>
-        <img src='../Logo.png' alt='Logo' />
+        <img src='/Logo.png' alt='Logo' />
       </div>
       <div className={styles.wrapper}>
         <Transfers />
