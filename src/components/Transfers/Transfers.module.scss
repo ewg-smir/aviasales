@@ -5,10 +5,8 @@
   word-wrap: normal;
   overflow-wrap: normal;
   min-width: 232px;
-  max-height: 252px;
+  max-height: 258px;
   background-color: variables.$white-col;
-  padding: 0 20px;
-  padding-top: 20px;
   border-radius: 5px;
   box-shadow: variables.$box-shadow;
   margin-right: 20px;
@@ -18,22 +16,11 @@
     color: variables.$gray-color;
     font-weight: variables.$font-weight;
     font-size: 12px;
-    margin: 0;
     line-height: 12px;
-    margin-bottom: 10px;
+    margin: 0;
     padding-right: 36px;
-    white-space: nowrap;
-  }
-
-  .options {
-    display: flex;
-    flex-direction: column;
-    font-weight: 400;
-    font-size: 13px;
-    line-height: 20px;
-    vertical-align: middle;
-    margin-bottom: 20px;
-    text-align: start;
+    padding-top: 20px;
+    padding-left: 20px;
     white-space: nowrap;
   }
 
@@ -50,11 +37,16 @@
       display: flex;
       align-items: center;
       color: variables.$gray-color;
-      padding: 4px 0;
+      padding-left: 20px;
+      padding-bottom: 20px;
+    }
+    :global(.ant-checkbox-wrapper:first-child) {
+      padding-top: 20px;
+      padding-bottom: 0;
     }
 
-    :global(.ant-checkbox-wrapper:first-child) {
-      margin-bottom: 4px; // чуть ниже "Все"
+    :global(.ant-checkbox-wrapper-checked) {
+      background-color: variables.$back-col;
     }
 
     :global(.ant-checkbox + span) {
@@ -65,6 +57,43 @@
       display: flex;
       flex-direction: column;
     }
+
+    :global(.ant-checkbox-inner) {
+      width: 20px;
+      height: 20px;
+      border-radius: 2px;
+      border: 1px solid variables.$mouse-col;
+      background-color: variables.$white-col;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+    }
+
+    :global(.ant-checkbox-checked .ant-checkbox-inner) {
+      background-color: variables.$white-col !important;
+      border-color: variables.$cyan-col !important;
+    }
+
+    :global(.ant-checkbox-checked .ant-checkbox-inner::after) {
+      content: '';
+      position: absolute;
+      border-color: variables.$cyan-col !important;
+      display: table;
+      width: 6px;
+      height: 10px;
+      border: solid #fff;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(45deg);
+    }
+
+    :global(.ant-checkbox-wrapper:hover .ant-checkbox-inner),
+    :global(.ant-checkbox:hover .ant-checkbox-inner) {
+      border-color: variables.$cyan-col;
+    }
   }
 
   .checkboxGroup {
@@ -73,18 +102,23 @@
 
     :global(.ant-checkbox-wrapper) {
       display: flex;
-      align-items: center; // добавлено для выравнивания по вертикали
+      align-items: center;
       color: variables.$gray-color;
-      padding: 5px 0;
+    }
+
+    :global(.ant-checkbox-wrapper:first-child) {
+      padding-top: 20px;
+      padding-bottom: 20px;
     }
 
     :global(.ant-checkbox) {
-      top: 0; // убирает лишний сдвиг вверх
-      transform: translateY(0); // сброс возможных эффектов
+      top: 0;
+      transform: translateY(0);
     }
 
     :global(.ant-checkbox + span) {
-      padding-left: 8px; // отступ между чекбоксом и текстом
+      padding: 0;
+      padding-left: 8px;
     }
 
     :global(.ant-checkbox-group) {
