@@ -69,7 +69,6 @@ function App() {
 
     fetchAll();
   }, [dispatch]);
-  console.log({ tickets, categories, activeCategory });
 
   const ticketsRes = sortTickets
     .slice(0, count)
