@@ -1,0 +1,23 @@
+@use './variables.scss';
+@use './responsive.scss';
+
+body {
+  background-color: variables.$white-color;
+  margin: 0;
+  padding: 0;
+  font-family: 'Open Sans', sans-serif;
+  box-sizing: border-box;
+}
+
+:where(.css-dev-only-do-not-override-1d4w9r2).ant-checkbox-wrapper {
+  color: variables.$gray-color;
+}
+
+:where(.css-dev-only-do-not-override-1d4w9r2).ant-checkbox-group {
+  flex-direction: column;
+}
+
+:where(.css-dev-only-do-not-override-1d4w9r2).ant-checkbox + span {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}

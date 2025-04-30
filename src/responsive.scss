@@ -1,0 +1,137 @@
+@media (max-width: 768px) {
+  .App {
+    padding: 20px;
+  }
+
+  .wrapper {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .transfers {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+
+  .tickets {
+    padding: 15px;
+
+    .header {
+      flex-direction: column;
+      text-align: center;
+
+      .price {
+        margin-right: 0;
+        margin-bottom: 10px;
+      }
+
+      img {
+        margin-left: 0;
+        margin-top: 10px;
+      }
+    }
+
+    .body {
+      grid-template-columns: 1fr;
+      row-gap: 15px;
+    }
+  }
+
+  .categories {
+    flex-direction: column;
+    gap: 10px;
+
+    .categoryButton {
+      min-width: 100%;
+      width: 100%;
+    }
+  }
+
+  .button {
+    font-size: 14px;
+    padding: 12px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .App {
+    padding: 30px;
+  }
+
+  .wrapper {
+    gap: 20px;
+    justify-content: center;
+  }
+
+  .transfers {
+    margin-right: 0;
+  }
+
+  .tickets {
+    .body {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .categories {
+    justify-content: center;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .App {
+    padding: 20px;
+  }
+
+  .wrapper {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .transfers {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+
+  .tickets {
+    padding: 15px;
+
+    .header {
+      flex-direction: column;
+      text-align: center;
+
+      .price {
+        margin-right: 0;
+        margin-bottom: 10px;
+      }
+
+      img {
+        margin-left: 0;
+        margin-top: 10px;
+      }
+    }
+
+    .body {
+      grid-template-columns: 1fr;
+      row-gap: 15px;
+    }
+  }
+
+  .categories {
+    flex-direction: column;
+    gap: 10px;
+
+    .categoryButton {
+      min-width: 100%;
+      width: 100%;
+    }
+  }
+
+  .button {
+    font-size: 14px;
+    padding: 12px;
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:prettier/recommended",
+    "airbnb",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:jsx-a11y/recommended",
+    "plugin:react-hooks/recommended"
+  ],
+  "plugins": ["react", "prettier", "import", "jsx-a11y", "react-hooks"],
+  "env": {
+    "browser": true,
+    "node": true,
+    "es2021": true
+  },
+  "parser": "@babel/eslint-parser",
+  "parserOptions": {
+    "requireConfigFile": false,
+    "babelOptions": {
+      "presets": ["@babel/preset-env", "@babel/preset-react"]
+    }
+  },
+  "rules": {
+    "indent": [
+      "error",
+      2,
+      {
+        "ignoredNodes": [
+          "JSXElement",
+          "JSXElement > *",
+          "JSXAttribute",
+          "JSXIdentifier",
+          "JSXNamespacedName",
+          "JSXMemberExpression",
+          "JSXSpreadAttribute",
+          "JSXExpressionContainer",
+          "JSXOpeningElement",
+          "JSXClosingElement",
+          "JSXText",
+          "JSXEmptyExpression",
+          "JSXSpreadChild"
+        ]
+      }
+    ],
+    "react/jsx-indent": ["error", 2],
+    "react/jsx-indent-props": ["error", 2],
+    "arrow-body-style": "off",
+    "arrow-parens": ["error", "always"],
+    "operator-linebreak": "off",
+    "no-nested-ternary": "off",
+    "no-multiple-empty-lines": ["error", { "max": 1 }],
+    "no-console": "off",
+    "max-len": "off",
+    "no-unused-vars": "off",
+    "no-param-reassign": [
+      "error",
+      {
+        "props": true,
+        "ignorePropertyModificationsFor": ["state"]
+      }
+    ],
+    "jsx-quotes": ["error", "prefer-single"],
+    "prettier/prettier": [
+      "error",
+      {
+        "singleQuote": true,
+        "jsxSingleQuote": true,
+        "bracketSpacing": true,
+        "spaceBeforeFunctionParen": true,
+        "endOfLine": "lf",
+        "tabWidth": 2,
+        "useTabs": false,
+        "printWidth": 120
+      }
+    ],
+    "no-trailing-spaces": "error",
+    "no-multi-spaces": ["error", { "ignoreEOLComments": true }],
+    "space-in-parens": ["error", "never"],
+    "react/jsx-filename-extension": ["error", { "extensions": [".jsx", ".js"] }],
+    "import/no-unresolved": "error",
+    "import/named": "error",
+    "import/default": "error",
+    "import/namespace": "error",
+    "import/no-named-as-default": "warn",
+    "react/prop-types": "off",
+    "react/react-in-jsx-scope": "off",
+    "react/jsx-no-bind": "warn",
+    "react/jsx-no-constructed-context-values": "warn",
+    "comma-dangle": ["error", "always-multiline"],
+    "object-curly-newline": ["error", { "consistent": true }],
+    "react/jsx-one-expression-per-line": "off"
+  },
+  "overrides": [
+    {
+      "files": ["vite.config.js"],
+      "rules": {
+        "import/no-extraneous-dependencies": ["error", { "devDependencies": true }]
+      }
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+@use '../../variables.scss';
+
+.App {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 50px 103px;
+  text-align: center;
+  .logo {
+    height: 6em;
+    padding-bottom: 50px;
+    will-change: filter;
+    transition: filter 300ms;
+    &:hover {
+      filter: drop-shadow(0 0 2em variables.$violet-color);
+    }
+    &.react:hover {
+      filter: drop-shadow(0 0 2em variables.$blue-color);
+    }
+  }
+  .wrapper {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .h2{
+    font-size: 17px;
+    font-weight: variables.$font-weight;
+  }
+  .spin{
+    padding: 20px;
+  }
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}

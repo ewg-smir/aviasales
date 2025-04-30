@@ -1,0 +1,42 @@
+@use '../../variables.scss';
+
+.transfers {
+  box-sizing: border-box;
+  word-wrap: normal;
+  overflow-wrap: normal;
+  min-width: 232px;
+  max-height: 252px;
+  background-color: variables.$white-col;
+  padding: 0 20px;
+  padding-top: 20px;
+  border-radius: 5px;
+  box-shadow: variables.$box-shadow;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  .title {
+    color: variables.$gray-color;
+    font-weight: variables.$font-weight;
+    font-size: 12px;
+    margin: 0;
+    line-height: 12px;
+    margin-bottom: 10px;
+    padding-right: 36px;
+    white-space: nowrap;
+  }
+  .options {
+    display: flex;
+    flex-direction: column;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 20px;
+    vertical-align: middle;
+    margin-bottom: 20px;
+    text-align: start;
+    white-space: nowrap;
+  }
+  .options .ant-checkbox-wrapper {
+    display: block;
+    color: variables.$gray-color;
+    word-break: normal;
+  }
+}

@@ -1,0 +1,34 @@
+@use '../../variables.scss';
+
+.categories {
+  display: flex;
+  flex-wrap: wrap;
+  .categoryButton {
+    color: variables.$gray-color;
+    background-color: variables.$white-col;
+    padding: 15px;
+    font-size: 12px;
+    font-weight: variables.$font-weight;
+    line-height: 20px;
+    border: 1px solid variables.$border-col;
+    border-radius: 5px;
+    min-width: 168px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      background-color: variables.$back-col;
+      border-color: variables.$cyan-col;
+    }
+
+    &.active {
+      background-color: variables.$cyan-col;
+      color: variables.$white-col;
+      border-color: variables.$cyan-col;
+    }
+  }
+}
