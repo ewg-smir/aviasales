@@ -1,9 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = [
-  { id: '1', name: 'САМЫЙ ДЕШЕВЫЙ', active: true },
-  { id: '2', name: 'САМЫЙ БЫСТРЫЙ', active: false },
-  { id: '3', name: 'ОПТИМАЛЬНЫЙ', active: false },
+  { id: 1, name: 'САМЫЙ ДЕШЕВЫЙ', active: true },
+  { id: 2, name: 'САМЫЙ БЫСТРЫЙ', active: false },
+  { id: 3, name: 'ОПТИМАЛЬНЫЙ', active: false },
 ];
 
 const categorySlice = createSlice({

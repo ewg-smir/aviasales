@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Spin } from 'antd';
 import { setCategory } from '../../store/categorySlice';
@@ -33,8 +33,8 @@ function App() {
 
     return filters.includes(forwardLabel) && filters.includes(backwardLabel);
   });
-
-  const sortTickets = filteredTickets.sort((a, b) => {
+  const sortTickets = [...filteredTickets].slice(0, count).sort((a, b) => {
+    const getTotalDuration = (t) => t.segments[0].duration + t.segments[1].duration;
     if (activeCategory.name === 'САМЫЙ ДЕШЕВЫЙ') {
       return a.price - b.price;
     }
@@ -44,7 +44,8 @@ function App() {
       return durationA - durationB;
     }
     if (activeCategory.name === 'ОПТИМАЛЬНЫЙ') {
-      const getTotalDuration = (t) => t.segments[0].duration + t.segments[1].duration;
+      if (filteredTickets.length === 0) return 0;
+
       const maxPrice = Math.max(...filteredTickets.map((t) => t.price));
       const maxDuration = Math.max(...filteredTickets.map(getTotalDuration));
 
@@ -60,7 +61,7 @@ function App() {
       try {
         const { payload } = await dispatch(fetchSearchId());
         if (payload) {
-          dispatch(fetchTickets({ payload }));
+          dispatch(fetchTickets(payload));
         }
       } catch (error) {
         console.error('Ошибка при загрузке searchId:', error);
@@ -70,25 +71,23 @@ function App() {
     fetchAll();
   }, [dispatch]);
 
-  const ticketsRes = sortTickets
-    .slice(0, count)
-    .map((obj) => (
-      <Tickets
-        key={`${obj.carrier}-${obj.price}-${obj.segments[0].date}`}
-        price={obj.price}
-        carrier={obj.carrier}
-        origin={obj.segments[0].origin}
-        destination={obj.segments[0].destination}
-        date={obj.segments[0].date}
-        stops={obj.segments[0].stops}
-        duration={obj.segments[0].duration}
-        returnOrigin={obj.segments[1].origin}
-        returnDestination={obj.segments[1].destination}
-        returnDate={obj.segments[1].date}
-        returnStops={obj.segments[1].stops}
-        returnDuration={obj.segments[1].duration}
-      />
-    ));
+  const ticketsRes = sortTickets.map((obj) => (
+    <Tickets
+      key={`${obj.carrier}-${obj.price}-${obj.segments[0].date}`}
+      price={obj.price}
+      carrier={obj.carrier}
+      origin={obj.segments[0].origin}
+      destination={obj.segments[0].destination}
+      date={obj.segments[0].date}
+      stops={obj.segments[0].stops}
+      duration={obj.segments[0].duration}
+      returnOrigin={obj.segments[1].origin}
+      returnDestination={obj.segments[1].destination}
+      returnDate={obj.segments[1].date}
+      returnStops={obj.segments[1].stops}
+      returnDuration={obj.segments[1].duration}
+    />
+  ));
 
   return (
     <div className={styles.App}>

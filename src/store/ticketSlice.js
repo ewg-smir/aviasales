@@ -10,7 +10,7 @@ const initialState = {
   error: null,
 };
 
-export const fetchSearchId = createAsyncThunk('tickets/fetchSearchIdStatus', async (thunkAPI) => {
+export const fetchSearchId = createAsyncThunk('tickets/fetchSearchIdStatus', async (_, thunkAPI) => {
   try {
     const {
       data: { searchId },
@@ -21,15 +21,32 @@ export const fetchSearchId = createAsyncThunk('tickets/fetchSearchIdStatus', asy
   }
 });
 
-export const fetchTickets = createAsyncThunk('tickets/fetchTicketsStatus', async (params, thunkAPI) => {
-  const { payload } = params;
+export const fetchTickets = createAsyncThunk('tickets/fetchTicketsStatus', async (_, thunkAPI) => {
   try {
-    const {
-      data: { tickets },
-    } = await axios.get(`https://aviasales-test-api.kata.academy/tickets?searchId=${payload}`);
-    return tickets;
+    const { payload: searchId } = await thunkAPI.dispatch(fetchSearchId());
+    let stop = false;
+    let errorCount = 0;
+    const maxErrors = 5;
+    let allTickets = [];
+
+    while (!stop && errorCount < maxErrors) {
+      try {
+        // eslint-disable-next-line no-await-in-loop
+        const response = await axios.get(`https://aviasales-test-api.kata.academy/tickets?searchId=${searchId}`);
+        allTickets = [...allTickets, ...response.data.tickets];
+        stop = response.data.stop;
+        errorCount = 0;
+      } catch {
+        errorCount += 1;
+        if (errorCount >= maxErrors) {
+          return thunkAPI.rejectWithValue('Слишком много ошибок при загрузке билетов');
+        }
+        console.log(errorCount);
+      }
+    }
+    return allTickets;
   } catch (error) {
-    return thunkAPI.rejectWithValue('Не удалось загрузить билеты');
+    return thunkAPI.rejectWithValue('Ошибка при получении searchId');
   }
 });
 
@@ -48,21 +65,17 @@ const ticketSlice = createSlice({
     builder
       .addCase(fetchTickets.pending, (state) => {
         state.status = 'loading';
-        state.tickets = [];
         state.error = null;
-        state.stop = false;
+        state.tickets = [];
       })
       .addCase(fetchTickets.fulfilled, (state, action) => {
-        state.tickets = action.payload;
         state.status = 'success';
-        state.error = null;
+        state.tickets = action.payload;
         state.stop = true;
       })
       .addCase(fetchTickets.rejected, (state, action) => {
         state.status = 'error';
-        state.tickets = [];
         state.error = action.payload;
-        state.stop = false;
       });
   },
 });
