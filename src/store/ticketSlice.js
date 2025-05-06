@@ -5,6 +5,7 @@ const initialState = {
   filters: ['Без пересадок', '1 пересадка', '2 пересадки', '3 пересадки'],
   tickets: [],
   count: 5,
+  searchId: null,
   status: 'loading',
   stop: false,
   error: null,
@@ -21,9 +22,8 @@ export const fetchSearchId = createAsyncThunk('tickets/fetchSearchIdStatus', asy
   }
 });
 
-export const fetchTickets = createAsyncThunk('tickets/fetchTicketsStatus', async (_, thunkAPI) => {
+export const fetchTickets = createAsyncThunk('tickets/fetchTicketsStatus', async (searchId, thunkAPI) => {
   try {
-    const { payload: searchId } = await thunkAPI.dispatch(fetchSearchId());
     let stop = false;
     let errorCount = 0;
     const maxErrors = 5;
@@ -41,7 +41,6 @@ export const fetchTickets = createAsyncThunk('tickets/fetchTicketsStatus', async
         if (errorCount >= maxErrors) {
           return thunkAPI.rejectWithValue('Слишком много ошибок при загрузке билетов');
         }
-        console.log(errorCount);
       }
     }
     return allTickets;
@@ -73,12 +72,18 @@ const ticketSlice = createSlice({
         state.tickets = action.payload;
         state.stop = true;
       })
+      .addCase(fetchSearchId.fulfilled, (state, action) => {
+        state.searchId = action.payload;
+      })
       .addCase(fetchTickets.rejected, (state, action) => {
         state.status = 'error';
         state.error = action.payload;
       });
   },
 });
+
+export const selectTickets = (state) => state.tickets;
+export const selectTicketsFilters = (state) => state.tickets.filters;
 
 export const { setTickets, setFilters, addTickets } = ticketSlice.actions;
 

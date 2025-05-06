@@ -1,14 +1,14 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Checkbox } from 'antd';
-import { setFilters } from '../../store/ticketSlice';
-import { setSelectedValues, setSelectedAllValues } from '../../store/checkboxSlice';
+import { setFilters, selectTicketsFilters } from '../../store/ticketSlice';
+import { setSelectedValues, setSelectedAllValues, selectCheckbox } from '../../store/checkboxSlice';
 import styles from './Transfers.module.scss';
 
 function Transfers() {
   const dispatch = useDispatch();
-  const checkboxes = useSelector((state) => state.checkbox);
-  const filters = useSelector((state) => state.tickets.filters);
+  const checkboxes = useSelector(selectCheckbox);
+  const filters = useSelector(selectTicketsFilters);
 
   const checkedList = checkboxes.filter((item) => item.checked).map((item) => item.name);
   const checkboxOptions = checkboxes.map((item) => item.name);

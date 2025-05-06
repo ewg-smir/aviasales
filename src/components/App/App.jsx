@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Spin } from 'antd';
-import { setCategory } from '../../store/categorySlice';
-import { fetchTickets, fetchSearchId } from '../../store/ticketSlice';
+import { setCategory, selectCategory } from '../../store/categorySlice';
+import { fetchTickets, fetchSearchId, selectTickets } from '../../store/ticketSlice';
 import styles from './App.module.scss';
 import Categories from '../Categories/Categories';
 import Transfers from '../Transfers/Transfers';
@@ -11,8 +11,8 @@ import Button from '../Snap/Snap';
 
 function App() {
   const dispatch = useDispatch();
-  const categories = useSelector((state) => state.category);
-  const { tickets, status, filters, count } = useSelector((state) => state.tickets);
+  const categories = useSelector(selectCategory);
+  const { tickets, status, filters, count, searchId } = useSelector(selectTickets);
 
   const onChangeCategory = (id) => {
     dispatch(setCategory(id));
@@ -57,19 +57,14 @@ function App() {
   });
 
   useEffect(() => {
-    const fetchAll = async () => {
-      try {
-        const { payload } = await dispatch(fetchSearchId());
-        if (payload) {
-          dispatch(fetchTickets(payload));
-        }
-      } catch (error) {
-        console.error('Ошибка при загрузке searchId:', error);
-      }
-    };
-
-    fetchAll();
+    dispatch(fetchSearchId());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (searchId) {
+      dispatch(fetchTickets(searchId));
+    }
+  }, [dispatch, searchId]);
 
   const ticketsRes = sortTickets.map((obj) => (
     <Tickets
@@ -104,16 +99,13 @@ function App() {
               <h2 className={styles.h2}>Произошла ошибка при загрузке билетов 😢</h2>
             </div>
           )}
-
-          {filters.length === 0 && (
+          {status === 'success' && filteredTickets.length === 0 && (
             <div>
               <h2 className={styles.h2}>Рейсов, подходящих под заданные фильтры, не найдено</h2>
             </div>
           )}
-
           {status !== 'error' && filters.length > 0 && ticketsRes}
-          {/* {status !== 'error' && filters.length > 0 && categories.map((category) => category.active && category.id === 1 ? ticketsRes.sort((a, b) => a.price - b.price) : ticketsRes)} */}
-          <Button />
+          {status === 'success' && filteredTickets.length > 0 && <Button />}
         </div>
       </div>
     </div>
