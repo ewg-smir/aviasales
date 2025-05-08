@@ -31,6 +31,14 @@
     align-items: center;
     height: 50vh;
   }
+  .loadingMore {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    color: #555;
+    padding: 20px;
+  }
 }
 
 @keyframes logo-spin {

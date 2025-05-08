@@ -1,16 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const initialState = {
-  filters: ['Без пересадок', '1 пересадка', '2 пересадки', '3 пересадки'],
-  tickets: [],
-  count: 5,
-  searchId: null,
-  status: 'loading',
-  stop: false,
-  error: null,
-};
-
 export const fetchSearchId = createAsyncThunk('tickets/fetchSearchIdStatus', async (_, thunkAPI) => {
   try {
     const {
@@ -27,13 +17,12 @@ export const fetchTickets = createAsyncThunk('tickets/fetchTicketsStatus', async
     let stop = false;
     let errorCount = 0;
     const maxErrors = 5;
-    let allTickets = [];
 
     while (!stop && errorCount < maxErrors) {
       try {
         // eslint-disable-next-line no-await-in-loop
         const response = await axios.get(`https://aviasales-test-api.kata.academy/tickets?searchId=${searchId}`);
-        allTickets = [...allTickets, ...response.data.tickets];
+        thunkAPI.dispatch(addTicketsPart(response.data.tickets));
         stop = response.data.stop;
         errorCount = 0;
       } catch {
@@ -43,11 +32,22 @@ export const fetchTickets = createAsyncThunk('tickets/fetchTicketsStatus', async
         }
       }
     }
-    return allTickets;
+    return true;
   } catch (error) {
     return thunkAPI.rejectWithValue('Ошибка при получении searchId');
   }
 });
+
+const initialState = {
+  filters: ['Без пересадок', '1 пересадка', '2 пересадки', '3 пересадки'],
+  tickets: [],
+  count: 5,
+  searchId: null,
+  status: 'loading',
+  stop: false,
+  error: null,
+  loadingMore: false,
+};
 
 const ticketSlice = createSlice({
   name: 'tickets',
@@ -59,6 +59,9 @@ const ticketSlice = createSlice({
     setFilters(state, action) {
       state.filters = action.payload;
     },
+    addTicketsPart(state, action) {
+      state.tickets = [...state.tickets, ...action.payload];
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -66,11 +69,12 @@ const ticketSlice = createSlice({
         state.status = 'loading';
         state.error = null;
         state.tickets = [];
+        state.loadingMore = true;
       })
-      .addCase(fetchTickets.fulfilled, (state, action) => {
+      .addCase(fetchTickets.fulfilled, (state) => {
         state.status = 'success';
-        state.tickets = action.payload;
         state.stop = true;
+        state.loadingMore = false;
       })
       .addCase(fetchSearchId.fulfilled, (state, action) => {
         state.searchId = action.payload;
@@ -82,9 +86,9 @@ const ticketSlice = createSlice({
   },
 });
 
+export const { addTickets, setFilters, addTicketsPart } = ticketSlice.actions;
+
 export const selectTickets = (state) => state.tickets;
 export const selectTicketsFilters = (state) => state.tickets.filters;
-
-export const { setTickets, setFilters, addTickets } = ticketSlice.actions;
 
 export default ticketSlice.reducer;

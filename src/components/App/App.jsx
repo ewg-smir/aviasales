@@ -12,7 +12,7 @@ import Button from '../Snap/Snap';
 function App() {
   const dispatch = useDispatch();
   const categories = useSelector(selectCategory);
-  const { tickets, status, filters, count, searchId } = useSelector(selectTickets);
+  const { tickets, status, filters, count, searchId, loadingMore } = useSelector(selectTickets);
 
   const onChangeCategory = (id) => {
     dispatch(setCategory(id));
@@ -93,7 +93,8 @@ function App() {
         <Transfers />
         <div className='App__results'>
           <Categories value={categories} onClickCategory={onChangeCategory} />
-          {status === 'loading' && <Spin className={styles.spin} size='large' />}
+          {status === 'loading' && !loadingMore && <Spin className={styles.spin} size='large' />}
+          {status === 'loading' && loadingMore && <div className={styles.loadingMore}>Загружаются новые билеты...</div>}
           {status === 'error' && (
             <div>
               <h2 className={styles.h2}>Произошла ошибка при загрузке билетов 😢</h2>
@@ -105,7 +106,7 @@ function App() {
             </div>
           )}
           {status !== 'error' && filters.length > 0 && ticketsRes}
-          {status === 'success' && filteredTickets.length > 0 && <Button />}
+          {status === 'success' && filteredTickets.length > 0 && !loadingMore && <Button />}
         </div>
       </div>
     </div>
