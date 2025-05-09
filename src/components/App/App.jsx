@@ -94,7 +94,6 @@ function App() {
     />
   ));
 
-  console.log({ tickets })
   return (
     <div className={styles.App}>
       <div className={styles.logo}>

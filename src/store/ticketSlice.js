@@ -74,7 +74,7 @@ const ticketSlice = createSlice({
         state.status = 'loading';
         state.error = null;
         if (!state.loadingMore) {
-          state.tickets = []; // только при первом заходе
+          state.tickets = []; 
         }
         state.loadingMore = true;
       })
