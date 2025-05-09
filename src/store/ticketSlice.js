@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { nanoid } from 'nanoid';
 import axios from 'axios';
 
 export const fetchSearchId = createAsyncThunk('tickets/fetchSearchIdStatus', async (_, thunkAPI) => {
@@ -60,7 +61,11 @@ const ticketSlice = createSlice({
       state.filters = action.payload;
     },
     addTicketsPart(state, action) {
-      state.tickets = [...state.tickets, ...action.payload];
+      const newTickets = action.payload.map((ticket) => ({
+        ...ticket,
+        _id: nanoid(),
+      }));
+      state.tickets = [...state.tickets, ...newTickets];
     },
   },
   extraReducers: (builder) => {
@@ -68,7 +73,9 @@ const ticketSlice = createSlice({
       .addCase(fetchTickets.pending, (state) => {
         state.status = 'loading';
         state.error = null;
-        state.tickets = [];
+        if (!state.loadingMore) {
+          state.tickets = []; // только при первом заходе
+        }
         state.loadingMore = true;
       })
       .addCase(fetchTickets.fulfilled, (state) => {

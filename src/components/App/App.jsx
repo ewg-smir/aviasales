@@ -31,30 +31,40 @@ function App() {
     // prettier-ignore
     const backwardLabel = backwardStops === 0 ? 'Без пересадок' : `${backwardStops} пересадк${backwardStops === 1 ? 'а' : 'и'}`;
 
-    return filters.includes(forwardLabel) && filters.includes(backwardLabel);
-  });
-  const sortTickets = [...filteredTickets].slice(0, count).sort((a, b) => {
-    const getTotalDuration = (t) => t.segments[0].duration + t.segments[1].duration;
-    if (activeCategory.name === 'САМЫЙ ДЕШЕВЫЙ') {
-      return a.price - b.price;
-    }
-    if (activeCategory.name === 'САМЫЙ БЫСТРЫЙ') {
-      const durationA = a.segments[0].duration + a.segments[1].duration;
-      const durationB = b.segments[0].duration + b.segments[1].duration;
-      return durationA - durationB;
-    }
-    if (activeCategory.name === 'ОПТИМАЛЬНЫЙ') {
-      if (filteredTickets.length === 0) return 0;
+    return filters.includes(forwardLabel) || filters.includes(backwardLabel);
 
-      const maxPrice = Math.max(...filteredTickets.map((t) => t.price));
-      const maxDuration = Math.max(...filteredTickets.map(getTotalDuration));
-
-      const scoreA = a.price / maxPrice + getTotalDuration(a) / maxDuration;
-      const scoreB = b.price / maxPrice + getTotalDuration(b) / maxDuration;
-      return scoreA - scoreB;
-    }
-    return 0;
   });
+  const getTotalDuration = (t) => t.segments[0].duration + t.segments[1].duration;
+
+  const sortedTickets = useMemo(() => {
+    const sorted = [...filteredTickets].sort((a, b) => {
+      if (activeCategory.name === 'САМЫЙ ДЕШЕВЫЙ') {
+        return a.price - b.price;
+      }
+
+      if (activeCategory.name === 'САМЫЙ БЫСТРЫЙ') {
+        return getTotalDuration(a) - getTotalDuration(b);
+      }
+
+      if (activeCategory.name === 'ОПТИМАЛЬНЫЙ') {
+        if (filteredTickets.length === 0) return 0;
+
+        const maxPrice = Math.max(...filteredTickets.map((t) => t.price));
+        const maxDuration = Math.max(...filteredTickets.map(getTotalDuration));
+
+        const scoreA = a.price / maxPrice + getTotalDuration(a) / maxDuration;
+        const scoreB = b.price / maxPrice + getTotalDuration(b) / maxDuration;
+        return scoreA - scoreB;
+      }
+
+      return 0;
+    });
+
+    return sorted;
+  }, [filteredTickets, activeCategory]);
+
+  const visibleTickets = sortedTickets.slice(0, count);
+
 
   useEffect(() => {
     dispatch(fetchSearchId());
@@ -66,9 +76,9 @@ function App() {
     }
   }, [dispatch, searchId]);
 
-  const ticketsRes = sortTickets.map((obj) => (
+  const ticketsRes = visibleTickets.map((obj, index) => (
     <Tickets
-      key={`${obj.carrier}-${obj.price}-${obj.segments[0].date}`}
+      key={obj._id}
       price={obj.price}
       carrier={obj.carrier}
       origin={obj.segments[0].origin}
@@ -84,6 +94,7 @@ function App() {
     />
   ));
 
+  console.log({ tickets })
   return (
     <div className={styles.App}>
       <div className={styles.logo}>
@@ -105,8 +116,8 @@ function App() {
               <h2 className={styles.h2}>Рейсов, подходящих под заданные фильтры, не найдено</h2>
             </div>
           )}
-          {status !== 'error' && filters.length > 0 && ticketsRes}
-          {status === 'success' && filteredTickets.length > 0 && !loadingMore && <Button />}
+          {status !== 'error' && ticketsRes}
+          {filteredTickets.length > 0 && <Button disabled={loadingMore} />}
         </div>
       </div>
     </div>
