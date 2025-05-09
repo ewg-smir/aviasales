@@ -1,1 +1,1 @@
-aviasalessssssss.vercel.app
+ebanyaviasales.vercel.app
