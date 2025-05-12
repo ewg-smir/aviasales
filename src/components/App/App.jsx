@@ -20,48 +20,49 @@ function App() {
 
   const activeCategory = categories.find((category) => category.active);
 
+  const getStopsLabel = (count) => {
+    if (count === 0) return 'Без пересадок';
+    if (count === 1) return '1 пересадка';
+    if (count >= 2 && count <= 4) return `${count} пересадки`;
+    return `${count} пересадок`;
+  };
+
   const filteredTickets = tickets.filter((ticket) => {
-    if (filters.length === 0) return true;
+    if (filters.length === 0) return;
 
-    const forwardStops = ticket.segments[0].stops.length;
-    const backwardStops = ticket.segments[1].stops.length;
+    const forwardLabel = getStopsLabel(ticket.segments[0].stops.length);
+    const backwardLabel = getStopsLabel(ticket.segments[1].stops.length);
 
-    // prettier-ignore
-    const forwardLabel = forwardStops === 0 ? 'Без пересадок' : `${forwardStops} пересадк${forwardStops === 1 ? 'а' : 'и'}`;
-    // prettier-ignore
-    const backwardLabel = backwardStops === 0 ? 'Без пересадок' : `${backwardStops} пересадк${backwardStops === 1 ? 'а' : 'и'}`;
-
-    return filters.includes(forwardLabel) || filters.includes(backwardLabel);
-
+    return filters.includes(forwardLabel) && filters.includes(backwardLabel);
   });
+
   const getTotalDuration = (t) => t.segments[0].duration + t.segments[1].duration;
 
   const sortedTickets = useMemo(() => {
-    const sorted = [...filteredTickets].sort((a, b) => {
-      if (activeCategory.name === 'САМЫЙ ДЕШЕВЫЙ') {
-        return a.price - b.price;
-      }
+    if (filteredTickets.length === 0) return [];
 
-      if (activeCategory.name === 'САМЫЙ БЫСТРЫЙ') {
-        return getTotalDuration(a) - getTotalDuration(b);
-      }
+    if (activeCategory.name === 'САМЫЙ ДЕШЕВЫЙ') {
+      return [...filteredTickets].sort((a, b) => a.price - b.price);
+    }
 
-      if (activeCategory.name === 'ОПТИМАЛЬНЫЙ') {
-        if (filteredTickets.length === 0) return 0;
+    if (activeCategory.name === 'САМЫЙ БЫСТРЫЙ') {
+      return [...filteredTickets].sort((a, b) => getTotalDuration(a) - getTotalDuration(b));
+    }
 
-        const maxPrice = Math.max(...filteredTickets.map((t) => t.price));
-        const maxDuration = Math.max(...filteredTickets.map(getTotalDuration));
+    if (activeCategory.name === 'ОПТИМАЛЬНЫЙ') {
+      const maxPrice = Math.max(...filteredTickets.map((t) => t.price));
+      const maxDuration = Math.max(...filteredTickets.map(getTotalDuration));
 
+      return [...filteredTickets].sort((a, b) => {
         const scoreA = a.price / maxPrice + getTotalDuration(a) / maxDuration;
         const scoreB = b.price / maxPrice + getTotalDuration(b) / maxDuration;
         return scoreA - scoreB;
-      }
+      });
+    }
 
-      return 0;
-    });
-
-    return sorted;
+    return filteredTickets;
   }, [filteredTickets, activeCategory]);
+
 
   const visibleTickets = sortedTickets.slice(0, count);
 
@@ -115,8 +116,17 @@ function App() {
               <h2 className={styles.h2}>Рейсов, подходящих под заданные фильтры, не найдено</h2>
             </div>
           )}
-          {status !== 'error' && ticketsRes}
-          {filteredTickets.length > 0 && <Button disabled={loadingMore} />}
+          {filters.length === 0 ? (
+            <div>
+              <h2 className={styles.h2}>Пожалуйста, выберите хотя бы один фильтр пересадок</h2>
+            </div>
+          ) : (
+            <>
+              {status !== 'error' && ticketsRes}
+              {status !== 'error' && filteredTickets.length > 0 && <Button disabled={loadingMore} />}
+            </>
+          )}
+
         </div>
       </div>
     </div>
